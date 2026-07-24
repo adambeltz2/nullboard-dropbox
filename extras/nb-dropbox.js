@@ -374,6 +374,45 @@ async function pullAndReconcile(storage, onBoardUpdated)
 	}
 }
 
+/* ---------- initial backfill on connect -----------------------------
+ *	The push agent above only fires on the *next* saveBoard()/
+ *	saveConfig() call - it doesn't retroactively push what's
+ *	already in localStorage. Without this, connecting Dropbox and
+ *	then just looking at the Dropbox folder (without editing
+ *	anything first) would correctly show nothing there yet, which
+ *	looks like sync being broken even though it isn't. This runs
+ *	once, right after the agent is activated, and pushes every
+ *	board + the config as-is (without touching local revision
+ *	numbers - it calls the agent directly, not Storage.saveBoard()).
+ */
+
+const BACKFILL_KEY = 'nb-dropbox.backfilled';
+
+function agentCall(fn)
+{
+	return new Promise(function(resolve){ fn(resolve); });
+}
+
+async function backfillPush(storage, agent)
+{
+	console.log('Dropbox: backfilling existing boards...');
+
+	await agentCall(function(cb){ agent.saveConfig(storage.getConfig(), cb); });
+
+	var boards = storage.getBoardIndex();
+
+	for (var [board_id, meta] of boards)
+	{
+		var board = storage.loadBoard(board_id);
+		if (! board) continue;
+
+		await agentCall(function(cb){ agent.saveBoard(board_id, board, meta, cb); });
+		console.log('Dropbox: pushed board ' + board_id + ' (' + meta.title + ')');
+	}
+
+	console.log('Dropbox: backfill complete.');
+}
+
 /* ---------- public surface ------------------------------------------ */
 
 window.NBDropbox = {
@@ -410,8 +449,19 @@ NB.backupTypes.set('dropbox', DropboxBackup);
 	// conf.backups.agents on purpose - see fixupConfig() in
 	// index.html, which resets anything it doesn't recognize)
 	var already = NB.storage.backups.agents.some(function(a){ return a.type == 'dropbox'; });
+	var agent;
+
 	if (! already)
-		NB.storage.backups.agents.push(new DropboxBackup('dropbox-1', {}, onBackupStatusChange));
+	{
+		agent = new DropboxBackup('dropbox-1', {}, onBackupStatusChange);
+		NB.storage.backups.agents.push(agent);
+
+		if (localStorage.getItem(BACKFILL_KEY) !== 'done')
+		{
+			await backfillPush(NB.storage, agent);
+			localStorage.setItem(BACKFILL_KEY, 'done');
+		}
+	}
 
 	// pull anything newer than what's local, then refresh the
 	// view if the currently open board was one of the ones updated

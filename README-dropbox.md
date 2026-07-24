@@ -1,5 +1,10 @@
 # Nullboard + Dropbox sync — setup
 
+*This is an addition to [Nullboard](https://github.com/apankrat/nullboard)
+by Alexander Pankratov — see [README.md](README.md) for the original
+project. This document covers only the Dropbox sync feature added in
+this fork.*
+
 This fork adds optional Dropbox sync on top of stock Nullboard. Local
 `localStorage` is still where every edit lands first and instantly —
 Dropbox is a background sync target, not the primary store. See the

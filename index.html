@@ -4970,6 +4970,7 @@
 			if (confirm('Disconnect Dropbox sync? Boards already saved locally are unaffected.'))
 			{
 				NBDropbox.disconnect();
+				localStorage.removeItem('nb-dropbox.backfilled');
 				NB.storage.backups.agents = NB.storage.backups.agents.filter(a => a.type != 'dropbox');
 				$('.config .dbx-status').text('off');
 			}

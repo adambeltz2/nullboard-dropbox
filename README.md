@@ -1,3 +1,23 @@
+> **This is a fork.** The original Nullboard was created by
+> [Alexander Pankratov](https://github.com/apankrat) — original repo:
+> [apankrat/nullboard](https://github.com/apankrat/nullboard), original
+> site: https://nullboard.io. Everything below this note, including
+> the screenshots and the "Background" section, is his original
+> README, unedited.
+>
+> **What's different in this fork:** added optional Dropbox sync
+> (`extras/nb-dropbox.js`) so boards can follow you between browsers
+> without relying on `localStorage` alone. See
+> [README-dropbox.md](README-dropbox.md) for what it does and how to
+> set it up. The core app — editing, drag-and-drop, undo/redo,
+> rendering — is untouched upstream code.
+>
+> Distributed under the same license as the original (BSD-2-Clause +
+> Commons Clause, see [LICENSE](LICENSE)) — free to use and modify,
+> not for resale.
+
+---
+
 # Nullboard
 
 Nullboard is a minimalist take on a kanban board / a task list manager, designed to be compact, readable and quick in use.
