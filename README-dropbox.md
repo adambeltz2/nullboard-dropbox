@@ -17,7 +17,7 @@ comments at the top of `extras/nb-dropbox.js` for how it works.
    `files.content.read` (App folder access usually grants these by
    default — just confirm they're checked).
 4. Under **Settings**:
-   - Copy the **App key** — you'll paste it into `nullboard.html`.
+   - Copy the **App key** — you'll paste it into `index.html`.
    - Under **OAuth 2 → Redirect URIs**, add the *exact* URL you'll
      host this on, no trailing slash, e.g.:
      `https://yourname.github.io/nullboard-dropbox/`
@@ -29,7 +29,7 @@ static/public clients like a GitHub Pages site.
 
 ## 2. Set the app key
 
-In `nullboard.html`, near the bottom, find:
+In `index.html`, near the bottom, find:
 
 ```html
 <script>window.NB_DROPBOX_APP_KEY = '';</script>
@@ -80,6 +80,6 @@ newer in Dropbox and pulls it in.
 python3 -m http.server 8000
 ```
 
-Then open `http://localhost:8000/nullboard.html`. Make sure you added
+Then open `http://localhost:8000/index.html`. Make sure you added
 that exact URL as a redirect URI in the Dropbox app settings too, or
 the OAuth callback will fail with a redirect_uri mismatch.

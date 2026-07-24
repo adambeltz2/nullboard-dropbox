@@ -2,7 +2,7 @@
  *	Dropbox sync for Nullboard
  *	---------------------------------------------------------------
  *	Plugs into Nullboard's existing BackupStorage plugin interface
- *	(see nullboard.html: class BackupStorage, NB.backupTypes).
+ *	(see index.html: class BackupStorage, NB.backupTypes).
  *
  *	Design:
  *	- localStorage (Storage_Local) remains the single source of
@@ -25,7 +25,7 @@
  *	   - Add your GitHub Pages URL as a redirect URI, e.g.
  *	     https://yourname.github.io/nullboard-dropbox/
  *	2. Put that app's key in window.NB_DROPBOX_APP_KEY (set in
- *	   nullboard.html, see the <script> block near the bottom).
+ *	   index.html, see the <script> block near the bottom).
  *	   This is a public client id, not a secret - PKCE means no
  *	   client secret is needed for a static site.
  */
@@ -98,7 +98,7 @@ async function startAuth()
 {
 	if (! appKey())
 	{
-		alert('No Dropbox app key configured. Set window.NB_DROPBOX_APP_KEY in nullboard.html first.');
+		alert('No Dropbox app key configured. Set window.NB_DROPBOX_APP_KEY in index.html first.');
 		return;
 	}
 
@@ -267,7 +267,7 @@ async function dbxListFolder()
  *	Same shape as the built-in SimpleBackup. Register it with
  *	NB.backupTypes and it starts receiving every saveBoard() /
  *	saveConfig() call automatically - see the wiring in
- *	nullboard.html near the bottom of the file.
+ *	index.html near the bottom of the file.
  */
 
 class DropboxBackup extends BackupStorage
@@ -386,7 +386,7 @@ window.NBDropbox = {
 };
 
 /* ---------- boot wiring ---------------------------------------------
- *	This file is loaded (via <script src>) after nullboard.html's
+ *	This file is loaded (via <script src>) after index.html's
  *	main inline script has already fully run - so NB, NB.storage,
  *	BackupStorage, openBoard(), updateBoardIndex() and the jQuery
  *	click handlers all already exist globally by the time this runs.
@@ -408,7 +408,7 @@ NB.backupTypes.set('dropbox', DropboxBackup);
 
 	// activate the push agent for this session (kept out of
 	// conf.backups.agents on purpose - see fixupConfig() in
-	// nullboard.html, which resets anything it doesn't recognize)
+	// index.html, which resets anything it doesn't recognize)
 	var already = NB.storage.backups.agents.some(function(a){ return a.type == 'dropbox'; });
 	if (! already)
 		NB.storage.backups.agents.push(new DropboxBackup('dropbox-1', {}, onBackupStatusChange));
